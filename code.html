@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GameChat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#4f00d0",
+                        "tertiary-fixed-dim": "#cdbdff",
+                        "secondary-fixed": "#9cf0ff",
+                        "secondary-fixed-dim": "#00daf3",
+                        "primary-container": "#1b4dff",
+                        "surface-bright": "#393939",
+                        "surface-container": "#201f1f",
+                        "background": "#131313",
+                        "surface-container-low": "#1c1b1b",
+                        "surface-container-lowest": "#0e0e0e",
+                        "inverse-on-surface": "#313030",
+                        "primary-fixed": "#dee1ff",
+                        "surface-dim": "#131313",
+                        "tertiary-container": "#6e3bf0",
+                        "secondary": "#bdf4ff",
+                        "secondary-container": "#00e3fd",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#20005f",
+                        "on-error": "#690005",
+                        "on-tertiary-container": "#e7ddff",
+                        "on-surface-variant": "#c4c5d9",
+                        "surface-variant": "#353534",
+                        "on-primary-fixed": "#001258",
+                        "on-primary": "#00218b",
+                        "inverse-surface": "#e5e2e1",
+                        "error": "#ffb4ab",
+                        "primary-fixed-dim": "#b9c3ff",
+                        "primary": "#b9c3ff",
+                        "surface-tint": "#b9c3ff",
+                        "on-secondary-fixed-variant": "#004f58",
+                        "tertiary-fixed": "#e8deff",
+                        "inverse-primary": "#0b46f9",
+                        "surface-container-highest": "#353534",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-high": "#2a2a2a",
+                        "on-primary-fixed-variant": "#0032c3",
+                        "outline": "#8e8fa2",
+                        "on-surface": "#e5e2e1",
+                        "outline-variant": "#434656",
+                        "on-secondary-fixed": "#001f24",
+                        "on-background": "#e5e2e1",
+                        "tertiary": "#cdbdff",
+                        "on-tertiary": "#370096",
+                        "surface": "#131313",
+                        "on-primary-container": "#dde0ff",
+                        "on-secondary-container": "#00616d",
+                        "on-secondary": "#00363d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "gutter": "16px",
+                        "sm": "8px",
+                        "unit": "4px",
+                        "xl": "32px",
+                        "margin": "20px",
+                        "md": "16px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["28px", { "lineHeight": "36px", "letterSpacing": "0px", "fontWeight": "600" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "0px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+        .markdown-body p { margin-bottom: 8px; }
+        .markdown-body p:last-child { margin-bottom: 0; }
+        .markdown-body strong { font-weight: 600; color: inherit; }
+        .markdown-body em { font-style: italic; color: inherit; }
+        .markdown-body ul { list-style-type: disc; margin-left: 20px; margin-bottom: 8px; }
+        .markdown-body ol { list-style-type: decimal; margin-left: 20px; margin-bottom: 8px; }
+        .markdown-body li { margin-bottom: 4px; }
+        .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 { font-weight: 600; margin-top: 12px; margin-bottom: 8px; }
+        
+        .typing-indicator span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background-color: currentColor;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+            margin: 0 2px;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+</style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-surface-container-high dark:bg-surface-container-high font-headline-md text-headline-md shadow-md fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin h-16">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary dark:text-primary" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<div class="flex flex-col leading-none">
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary leading-tight">GameChat</h1>
+<span class="font-label-md text-label-md text-on-surface-variant">Gaming Assistant</span>
+</div>
+</div>
+<button class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-variant transition-colors p-sm rounded-full Active:opacity-80 Active:scale-95 transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</header>
+<!-- Main Chat Area -->
+<main id="chat-container" class="flex-grow pt-16 pb-[100px] flex flex-col overflow-y-auto px-margin">
+<div id="empty-state" class="flex-grow flex flex-col items-center justify-center space-y-xl max-w-2xl mx-auto w-full py-xl">
+<!-- Illustration / Logo Area -->
+<div class="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center shadow-lg border border-surface-variant">
+<span class="material-symbols-outlined text-display-lg text-primary" style="font-size: 48px; font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div class="text-center space-y-sm">
+<h2 class="font-title-lg text-title-lg text-on-surface">Welcome to GameChat</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Your ultimate AI companion for everything gaming. Ask me anything.</p>
+</div>
+<!-- Tappable Chips (Bento-ish Layout) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md w-full mt-lg">
+<button class="chip-btn flex items-center justify-between p-md rounded-xl border border-outline-variant bg-surface-container-low hover:bg-surface-container transition-colors text-left group">
+<span class="font-body-md text-body-md text-on-surface">Best games for PC?</span>
+<span class="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+<button class="chip-btn flex items-center justify-between p-md rounded-xl border border-outline-variant bg-surface-container-low hover:bg-surface-container transition-colors text-left group">
+<span class="font-body-md text-body-md text-on-surface">How to improve aim?</span>
+<span class="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+<button class="chip-btn flex items-center justify-between p-md rounded-xl border border-outline-variant bg-surface-container-low hover:bg-surface-container transition-colors text-left group">
+<span class="font-body-md text-body-md text-on-surface">BGMI vs Free Fire?</span>
+<span class="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+<button class="chip-btn flex items-center justify-between p-md rounded-xl border border-outline-variant bg-surface-container-low hover:bg-surface-container transition-colors text-left group">
+<span class="font-body-md text-body-md text-on-surface">Game lagging fix?</span>
+<span class="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+</div>
+</div>
+
+<div id="messages-container" class="space-y-3 mt-lg pb-md w-full max-w-3xl mx-auto hidden">
+    <!-- Messages will be appended here -->
+</div>
+</main>
+<!-- Bottom Input Area -->
+<div class="fixed bottom-0 left-0 w-full bg-surface-container-highest border-t border-surface-variant p-sm z-40 pb-safe shadow-[0_-4px_12px_rgba(0,0,0,0.3)]">
+<div class="max-w-3xl mx-auto flex items-center gap-xs">
+<button id="attach-btn" class="p-sm text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container flex-shrink-0">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+<div class="flex-grow relative">
+<!-- image preview container -->
+<div id="image-preview-container" class="hidden absolute bottom-full left-0 mb-2 p-1 bg-surface-container rounded-lg border border-surface-variant flex items-center gap-2 z-50">
+  <img id="image-preview" class="h-10 w-10 object-cover rounded" src="" alt="Preview"/>
+  <button id="remove-image-btn" class="text-on-surface-variant hover:text-error">
+    <span class="material-symbols-outlined text-sm">close</span>
+  </button>
+</div>
+<input id="chat-input" class="w-full bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-full py-md pl-md pr-xl border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none placeholder:text-on-surface-variant transition-all" placeholder="Ask about any game…" type="text"/>
+</div>
+<button id="send-btn" class="p-sm text-surface-variant flex-shrink-0 rounded-full cursor-not-allowed" disabled>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+<input type="file" id="file-input" accept="image/*" class="hidden">
+</div>
+</div>
+
+<script>
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const attachBtn = document.getElementById('attach-btn');
+    const fileInput = document.getElementById('file-input');
+    const imagePreviewContainer = document.getElementById('image-preview-container');
+    const imagePreview = document.getElementById('image-preview');
+    const removeImageBtn = document.getElementById('remove-image-btn');
+    const emptyState = document.getElementById('empty-state');
+    const messagesContainer = document.getElementById('messages-container');
+    const chatContainer = document.getElementById('chat-container');
+    
+    let conversationHistory = [];
+    let selectedFile = null;
+    let isFirstMessage = true;
+
+    // Empty-send guard
+    function updateSendButton() {
+        const hasText = chatInput.value.trim() !== '';
+        const hasFile = selectedFile !== null;
+        
+        if (hasText || hasFile) {
+            sendBtn.disabled = false;
+            sendBtn.classList.remove('text-surface-variant', 'cursor-not-allowed');
+            sendBtn.classList.add('text-primary', 'hover:bg-surface-container', 'hover:text-primary-container');
+        } else {
+            sendBtn.disabled = true;
+            sendBtn.classList.add('text-surface-variant', 'cursor-not-allowed');
+            sendBtn.classList.remove('text-primary', 'hover:bg-surface-container', 'hover:text-primary-container');
+        }
+    }
+
+    chatInput.addEventListener('input', updateSendButton);
+
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !sendBtn.disabled) {
+            sendMessage();
+        }
+    });
+
+    // Chip buttons
+    document.querySelectorAll('.chip-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const text = btn.querySelector('span').textContent;
+            chatInput.value = text;
+            updateSendButton();
+            sendMessage();
+        });
+    });
+
+    // File attach
+    attachBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+            selectedFile = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+                imagePreviewContainer.classList.remove('hidden');
+            };
+            reader.readAsDataURL(selectedFile);
+            updateSendButton();
+        }
+    });
+
+    removeImageBtn.addEventListener('click', () => {
+        selectedFile = null;
+        fileInput.value = '';
+        imagePreviewContainer.classList.add('hidden');
+        imagePreview.src = '';
+        updateSendButton();
+    });
+
+    function scrollToBottom() {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function hideEmptyState() {
+        if (isFirstMessage) {
+            emptyState.style.display = 'none';
+            messagesContainer.classList.remove('hidden');
+            isFirstMessage = false;
+        }
+    }
+
+    function appendUserMessage(text, imgSrc = null) {
+        let content = `<div class="bg-primary-container text-on-primary-container px-md py-sm rounded-2xl rounded-tr-none max-w-[85%] font-body-md text-body-md shadow-sm flex flex-col gap-2">`;
+        if (imgSrc) {
+            content += `<img src="${imgSrc}" class="max-w-full h-auto rounded-lg max-h-48 object-cover">`;
+        }
+        if (text) {
+            content += `<div>${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>`;
+        }
+        content += `</div>`;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'flex justify-end';
+        wrapper.innerHTML = content;
+        messagesContainer.appendChild(wrapper);
+        scrollToBottom();
+    }
+
+    function appendBotLoading() {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'flex justify-start';
+        wrapper.id = 'bot-loading';
+        wrapper.innerHTML = `
+            <div class="bg-surface-container px-md py-sm rounded-2xl rounded-tl-none max-w-[85%] font-body-md text-body-md shadow-sm border border-surface-variant flex items-center justify-center min-h-[44px]">
+                <div class="typing-indicator">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        `;
+        messagesContainer.appendChild(wrapper);
+        scrollToBottom();
+        return wrapper;
+    }
+
+    function replaceLoadingWithBotMessage(loadingEl, replyText) {
+        const html = marked.parse(replyText);
+        loadingEl.innerHTML = `
+            <div class="bg-surface-container px-md py-sm rounded-2xl rounded-tl-none max-w-[85%] font-body-md text-body-md shadow-sm border border-surface-variant markdown-body">
+                ${html}
+            </div>
+        `;
+        loadingEl.removeAttribute('id');
+        scrollToBottom();
+    }
+
+    async function sendMessage() {
+        const text = chatInput.value.trim();
+        const file = selectedFile;
+        
+        if (!text && !file) return;
+
+        chatInput.value = '';
+        updateSendButton();
+        hideEmptyState();
+
+        // If file exists, show preview in chat
+        let fileDataUrl = null;
+        if (file) {
+            fileDataUrl = imagePreview.src;
+        }
+
+        appendUserMessage(text, fileDataUrl);
+        
+        // Remove image preview from input
+        selectedFile = null;
+        fileInput.value = '';
+        imagePreviewContainer.classList.add('hidden');
+        imagePreview.src = '';
+        updateSendButton();
+
+        const loadingEl = appendBotLoading();
+
+        try {
+            let response;
+            if (file) {
+                // Vision API
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('message', text);
+
+                response = await fetch('/vision', {
+                    method: 'POST',
+                    body: formData
+                });
+            } else {
+                // Chat API
+                response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text, history: conversationHistory })
+                });
+            }
+
+            const data = await response.json();
+            
+            replaceLoadingWithBotMessage(loadingEl, data.reply);
+
+            // Update history if not an error message
+            if (!data.reply.startsWith("I'm a bit busy") && !data.reply.startsWith("API error") && !data.reply.startsWith("Something went wrong")) {
+                 if (text) {
+                     conversationHistory.push({ role: 'user', parts: [text] });
+                 } else if (file) {
+                     conversationHistory.push({ role: 'user', parts: [text || "Image uploaded"] });
+                 }
+                 conversationHistory.push({ role: 'model', parts: [data.reply] });
+            }
+
+        } catch (error) {
+            console.error(error);
+            replaceLoadingWithBotMessage(loadingEl, "Something went wrong — please retry.");
+        }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+</script>
+</body></html>
